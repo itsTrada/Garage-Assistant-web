@@ -33,18 +33,17 @@ http://www.tooplate.com/view/2079-garage
 				<li><a href="#"><i class="fa fa-pinterest"></i></a></li>
 			</ul>
 			<ul class="givusacall">
-				<li>Give us a call : +84 902 999 396 </li>
+				<li>Give us a call : +84902 999 396 </li>
 			</ul>
 			<ul class="logreg">
 			<c:if test="${sessionScope.member == null }">
-				<li><a href="#">Login </a> </li>
-				<li><a href="#"><span class="register">Register</span></a></li>
+				<li><a href="login.html">Login </a> </li>
+				<li><a href="login.html"><span class="register">Register</span></a></li>
 			</c:if>
-			<c:if test="${sessionScope.member != null }">
-				<li><a href="#">Hello ${sessionScope.member.name }! </a> </li>
+			<c:if test="${sessionScope.member != null}">
+				<script type="text/javascript">alert("Welcome back, " + "${sessionScope.member.name}")</script>
+				<li><a href="logout">Hello, ${sessionScope.member.name}! </a> </li>
 			</c:if>
-			
-				
 			</ul>
 	</div>
 	<!-- Navbar Up -->
@@ -83,7 +82,7 @@ http://www.tooplate.com/view/2079-garage
 					<a href="contact.html">CONTACT</a>
  
 				</li>
-				<button><span class="postnewcar">POST NEW CAR</span></button>
+				<button><span class="postnewcar">BOOK A MOTORBIKE</span></button>
 			</ul>
 		</div>
 	</nav>

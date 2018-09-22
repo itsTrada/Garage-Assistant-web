@@ -13,16 +13,16 @@ import model.Member;
 import database.DatabaseHandler;
 
 /**
- * Servlet implementation class login
+ * Servlet implementation class register
  */
-@WebServlet("/login")
-public class login extends HttpServlet {
+@WebServlet("/register")
+public class register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public login() {
+    public register() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,23 +31,28 @@ public class login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//fetch the needed info to log in
-		String email = request.getParameter("liEmail");
-		String password = request.getParameter("liPassword");
+		//fetch the needed info to sign up
+		String id = request.getParameter("regId");
+		String name = request.getParameter("regName");
+		String mobile = request.getParameter("regMobile");
+		String email = request.getParameter("regEmail");
+		String password = request.getParameter("regPassword");
+		String cfrmPassword = request.getParameter("regCfrmPassword");
 		
-		Member liMember = new Member(email, password);
+		Member regMember = new Member(id, name, mobile, email , password);
 		DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
+		Member registered = databaseHandler.handleRegister(regMember);
 		
-		Member loged = databaseHandler.handleLogin(liMember);
-		
-		if(loged != null) {
-			HttpSession session = request.getSession();
-			session.setAttribute("member", loged);
-			request.getRequestDispatcher("/index.jsp").forward(request, response);//load home page
-		}
-		else {
+		if (password.toString() != cfrmPassword.toString()) {
 			response.sendRedirect("");
-			System.out.println("Log in error");
+			System.out.println("Password is not equal");
+		} else if(registered != null) {
+			HttpSession session = request.getSession();
+			session.setAttribute("member", registered);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);//load home page
+		} else {
+			response.sendRedirect("");
+			System.out.println("Register error");
 		}
 	}
 
@@ -55,7 +60,6 @@ public class login extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

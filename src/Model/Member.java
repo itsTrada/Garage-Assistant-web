@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public class Member {
     private String id;
@@ -17,10 +17,10 @@ public class Member {
 	}
     
 	public Member() {
-		
 	}
 
-	public Member(String id, String password) {
+	//log in purpose
+	public Member(String email, String password) {
 		this.email = email;
 		this.password = password;
 	}

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.regex.Pattern;
 
-import Model.Member;
+import model.Member;
 
 public class DatabaseHandler {
     private static DatabaseHandler handler = null;
@@ -40,8 +40,8 @@ public class DatabaseHandler {
         }
     }
     
-    public boolean handleLogin(Member member) {
-    	boolean flag = false;
+    public Member handleLogin(Member member) {
+    	Member logedIn = new Member();
     	
     	String loginStmt = "SELECT * FROM MEMBER WHERE email = ? AND password = ?";
     	try {
@@ -52,22 +52,22 @@ public class DatabaseHandler {
 			
 			ResultSet rs = stmt.executeQuery();
             if ( rs.next() ) {
-            	flag = true;
+            	logedIn.setName(rs.getString("name"));
             }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	return flag;
+    	return logedIn;
     }
     
-    public boolean isEmailExisted(Member member) {
+    public boolean isEmailExisted(String email) {
     	boolean flag = true;
     	
     	String checkEmailStmt = "SELECT * FROM MEMBER WHERE email = ?";
     	try {
 			PreparedStatement stmt = conn.prepareStatement(checkEmailStmt);
 			
-			stmt.setString(1, member.getEmail());
+			stmt.setString(1, email);
 			
 			ResultSet rs = stmt.executeQuery();
             if ( rs.next() ) {
@@ -79,14 +79,14 @@ public class DatabaseHandler {
     	return flag;
     }
     
-    public boolean isIdMemberExisted(Member member) {
+    public boolean isIdMemberExisted(String id) {
     	boolean flag = true;
     	
     	String checkIdStmt = "SELECT * FROM MEMBER WHERE idMember = ?";
     	try {
 			PreparedStatement stmt = conn.prepareStatement(checkIdStmt);
 			
-			stmt.setString(1, member.getEmail());
+			stmt.setString(1, id);
 			
 			ResultSet rs = stmt.executeQuery();
             if ( rs.next() ) {
@@ -98,11 +98,26 @@ public class DatabaseHandler {
     	return flag;
     }
     
-    public static boolean validateEmailAddress(String emailID) {
-        String regex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(emailID).matches();
+    public Member handleRegister(Member member) {
+    	Member registered = new Member();
+    	
+    	String signupStmt = "INSERT INTO MEMBER (idMember, name, mobile, email , password) VALUES ( ?, ?, ?, ?, ?)";
+    	try {
+			PreparedStatement stmt = conn.prepareStatement(signupStmt);
+			
+			stmt.setString(1, member.getId());
+			stmt.setString(2, member.getName());
+			stmt.setString(3, member.getMobile());
+			stmt.setString(4, member.getEmail());
+			stmt.setString(5, member.getPassword());
+			
+			stmt.executeUpdate();
+			registered.setName(member.getName());
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	return registered;
     }
 
 }
